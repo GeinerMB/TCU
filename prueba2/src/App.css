@@ -1,0 +1,44 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  /* Asegura que ocupe toda la altura de la pantalla */
+  background-image: url('../public/inicio.jpg');
+  /* Ruta a la imagen */
+  background-size: cover;
+  /* Ajusta la imagen al tamaño de la pantalla */
+  background-position: center;
+  /* Centra la imagen */
+  background-repeat: no-repeat;
+  /* Evita que la imagen se repita */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  /* Cambia el color del texto para que sea legible sobre la imagen */
+}
+
+.App-header {
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Fondo semitransparente para mejorar la legibilidad */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.options button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  /* Color de fondo del botón */
+  color: white;
+  /* Color del texto del botón */
+  border: none;
+  border-radius: 5px;
+}
+
+.options button:hover {
+  background-color: #45a049;
+  /* Cambia el color al pasar el mouse */
+}
