@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import './CreateQuiz.css';
 
 const CreateQuiz = () => {
     const [quizTitle, setQuizTitle] = useState('');
@@ -64,12 +65,13 @@ const CreateQuiz = () => {
     };
 
     return (
-        <div className="create-quiz">
-            <h2>Crear un nuevo Quiz</h2>
+        <div className="create-quiz-container">
+            <h2 className="quiz-title">Crear un nuevo Quiz</h2>
 
-            <div>
-                <label>Título del Quiz: </label>
+            <div className="input-group">
+                <label className="form-label">Título del Quiz: </label>
                 <input
+                    className="form-input"
                     type="text"
                     value={quizTitle}
                     onChange={(e) => setQuizTitle(e.target.value)}
@@ -77,46 +79,45 @@ const CreateQuiz = () => {
                 />
             </div>
 
-            <div>
-                <h3>Tipo de Pregunta</h3>
-                <div>
+            <div className="section-container">
+                <h3 className="section-title">Tipo de Pregunta</h3>
+                <div className="button-group">
                     <button
+                        className={`type-button ${questionType === 'multiple' ? 'active' : ''}`}
                         onClick={() => handleQuestionTypeChange('multiple')}
-                        style={{
-                            backgroundColor: questionType === 'multiple' ? '#4CAF50' : '#e7e7e7',
-                            marginRight: '10px'
-                        }}
                     >
-                        Opción Múltiple
+                        📝 Opción Múltiple
                     </button>
                     <button
+                        className={`type-button ${questionType === 'true_false' ? 'active' : ''}`}
                         onClick={() => handleQuestionTypeChange('true_false')}
-                        style={{
-                            backgroundColor: questionType === 'true_false' ? '#4CAF50' : '#e7e7e7'
-                        }}
                     >
-                        Verdadero/Falso
+                        ✔️ Verdadero/Falso
                     </button>
                 </div>
             </div>
 
-            <div>
-                <h3>Agregar Pregunta</h3>
-                <label>Pregunta: </label>
-                <input
-                    type="text"
-                    value={currentQuestion}
-                    onChange={(e) => setCurrentQuestion(e.target.value)}
-                    placeholder="Escribe la pregunta"
-                />
+            <div className="section-container">
+                <h3 className="section-title">Agregar Pregunta</h3>
+                <div className="input-group">
+                    <label className="form-label">Pregunta: </label>
+                    <input
+                        className="form-input"
+                        type="text"
+                        value={currentQuestion}
+                        onChange={(e) => setCurrentQuestion(e.target.value)}
+                        placeholder="Escribe la pregunta"
+                    />
+                </div>
             </div>
 
             {questionType === 'multiple' ? (
-                <div>
-                    <h4>Respuestas (Máx. 4)</h4>
+                <div className="section-container">
+                    <h4 className="section-title">Respuestas (Máx. 4)</h4>
                     {answers.map((answer, index) => (
-                        <div key={index}>
+                        <div key={index} className="answer-input-container">
                             <input
+                                className="answer-input"
                                 type="text"
                                 value={answer}
                                 onChange={(e) => handleAnswerChange(index, e.target.value)}
@@ -126,16 +127,19 @@ const CreateQuiz = () => {
                     ))}
                 </div>
             ) : (
-                <div>
-                    <h4>Opciones</h4>
-                    <p>Verdadero</p>
-                    <p>Falso</p>
+                <div className="section-container">
+                    <h4 className="section-title">Opciones</h4>
+                    <div className="true-false-container">
+                        <div className="true-false-option">✅ Verdadero</div>
+                        <div className="true-false-option">❌ Falso</div>
+                    </div>
                 </div>
             )}
 
-            <div>
-                <h4>Respuesta Correcta</h4>
+            <div className="section-container">
+                <h4 className="section-title">Respuesta Correcta</h4>
                 <select
+                    className="answer-select"
                     value={correctAnswer}
                     onChange={(e) => setCorrectAnswer(e.target.value)}
                     disabled={questionType === 'true_false' && !answers.every(a => a !== '')}
@@ -151,19 +155,41 @@ const CreateQuiz = () => {
                 </select>
             </div>
 
-            <button onClick={handleAddQuestion}>Agregar Pregunta</button>
-            <button onClick={handleSubmit}>Guardar Quiz</button>
+            <div className="action-buttons">
+                <button
+                    className="main-button add"
+                    onClick={handleAddQuestion}
+                    disabled={!currentQuestion}
+                >
+                    📥 Agregar Pregunta
+                </button>
+                <button
+                    className="main-button save"
+                    onClick={handleSubmit}
+                    disabled={questions.length === 0 || !quizTitle}
+                >
+                    💾 Guardar Quiz
+                </button>
+            </div>
 
-            <div>
-                <h3>Preguntas Agregadas</h3>
-                <ul>
+            <div className="added-questions">
+                <h3 className="section-title">Preguntas Agregadas</h3>
+                <ul className="question-list">
                     {questions.map((q, index) => (
-                        <li key={index}>
-                            <p>{q.question} <small>({q.type === 'multiple' ? 'Opción Múltiple' : 'Verdadero/Falso'})</small></p>
-                            <ul>
+                        <li key={index} className="question-item">
+                            <p className="question-text">
+                                {q.question}
+                                <span className="question-type">
+                                    ({q.type === 'multiple' ? 'Opción Múltiple' : 'Verdadero/Falso'})
+                                </span>
+                            </p>
+                            <ul className="answer-list">
                                 {q.answers.map((answer, i) => (
-                                    <li key={i}>
-                                        {answer} {answer === q.correctAnswer && "(Correcta)"}
+                                    <li
+                                        key={i}
+                                        className={`answer-item ${answer === q.correctAnswer ? 'correct' : ''}`}
+                                    >
+                                        {answer} {answer === q.correctAnswer && "✅"}
                                     </li>
                                 ))}
                             </ul>
@@ -173,10 +199,14 @@ const CreateQuiz = () => {
             </div>
 
             {quizCode && (
-                <div>
-                    <h3>¡Quiz creado con éxito!</h3>
-                    <p>Código del Quiz: <strong>{quizCode}</strong></p>
-                    <p>Comparte este código para que otras personas se unan a tu quiz.</p>
+                <div className="success-box">
+                    <h3 className="success-title">¡Quiz creado con éxito! 🎉</h3>
+                    <p className="code-text">
+                        Código del Quiz: <strong className="highlight">{quizCode}</strong>
+                    </p>
+                    <p className="instruction-text">
+                        Comparte este código para que otras personas se unan a tu quiz.
+                    </p>
                 </div>
             )}
         </div>
