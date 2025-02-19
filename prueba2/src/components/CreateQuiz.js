@@ -1,36 +1,14 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // Importamos la función uuidv4 para generar un ID único
+import { v4 as uuidv4 } from 'uuid';
 
 const CreateQuiz = () => {
     const [quizTitle, setQuizTitle] = useState('');
     const [questions, setQuestions] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState('');
+    const [questionType, setQuestionType] = useState('multiple');
     const [answers, setAnswers] = useState(['', '', '', '']);
     const [correctAnswer, setCorrectAnswer] = useState('');
-    const [quizCode, setQuizCode] = useState(''); // Para guardar el código generado
-
-    const handleAddQuestion = () => {
-        if (currentQuestion && answers.every(answer => answer !== '') && correctAnswer) {
-            const newQuestion = {
-                question: currentQuestion,
-                answers,
-                correctAnswer
-            };
-            setQuestions([...questions, newQuestion]);
-            setCurrentQuestion('');
-            setAnswers(['', '', '', '']);
-            setCorrectAnswer('');
-        }
-    };
-
-    const handleSubmit = () => {
-        // Generamos el código único para el quiz
-        const newQuizCode = uuidv4().slice(0, 8); // Tomamos los primeros 8 caracteres del UUID para un código más corto
-        setQuizCode(newQuizCode); // Establecemos el código generado
-
-        // Aquí puedes manejar el envío del quiz o cualquier otra lógica
-        console.log('Quiz creado:', { quizTitle, questions, quizCode });
-    };
+    const [quizCode, setQuizCode] = useState('');
 
     const handleAnswerChange = (index, value) => {
         const updatedAnswers = [...answers];
@@ -38,11 +16,59 @@ const CreateQuiz = () => {
         setAnswers(updatedAnswers);
     };
 
+    const handleQuestionTypeChange = (type) => {
+        setQuestionType(type);
+        if (type === 'true_false') {
+            setAnswers(['Verdadero', 'Falso']);
+            setCorrectAnswer('');
+        } else {
+            setAnswers(['', '', '', '']);
+            setCorrectAnswer('');
+        }
+    };
+
+    const handleAddQuestion = () => {
+        let isValid = false;
+
+        if (questionType === 'multiple') {
+            isValid = currentQuestion &&
+                answers.every(answer => answer !== '') &&
+                correctAnswer;
+        } else if (questionType === 'true_false') {
+            isValid = currentQuestion && correctAnswer;
+        }
+
+        if (isValid) {
+            const newQuestion = {
+                question: currentQuestion,
+                type: questionType,
+                answers: questionType === 'true_false' ? ['Verdadero', 'Falso'] : answers,
+                correctAnswer
+            };
+            setQuestions([...questions, newQuestion]);
+            setCurrentQuestion('');
+            setQuestionType('multiple');
+            setAnswers(['', '', '', '']);
+            setCorrectAnswer('');
+        }
+    };
+
+    const handleSubmit = () => {
+        const newQuizCode = uuidv4().slice(0, 8);
+        setQuizCode(newQuizCode);
+        console.log('Quiz creado:', {
+            quizTitle,
+            questions,
+            quizCode: newQuizCode
+        });
+    };
+
     return (
         <div className="create-quiz">
             <h2>Crear un nuevo Quiz</h2>
+
             <div>
-                <label>Título del Quiz:</label>
+                <label>Título del Quiz: </label>
                 <input
                     type="text"
                     value={quizTitle}
@@ -52,8 +78,31 @@ const CreateQuiz = () => {
             </div>
 
             <div>
+                <h3>Tipo de Pregunta</h3>
+                <div>
+                    <button
+                        onClick={() => handleQuestionTypeChange('multiple')}
+                        style={{
+                            backgroundColor: questionType === 'multiple' ? '#4CAF50' : '#e7e7e7',
+                            marginRight: '10px'
+                        }}
+                    >
+                        Opción Múltiple
+                    </button>
+                    <button
+                        onClick={() => handleQuestionTypeChange('true_false')}
+                        style={{
+                            backgroundColor: questionType === 'true_false' ? '#4CAF50' : '#e7e7e7'
+                        }}
+                    >
+                        Verdadero/Falso
+                    </button>
+                </div>
+            </div>
+
+            <div>
                 <h3>Agregar Pregunta</h3>
-                <label>Pregunta:</label>
+                <label>Pregunta: </label>
                 <input
                     type="text"
                     value={currentQuestion}
@@ -62,31 +111,42 @@ const CreateQuiz = () => {
                 />
             </div>
 
-            <div>
-                <h4>Respuestas</h4>
-                {answers.map((answer, index) => (
-                    <div key={index}>
-                        <input
-                            type="text"
-                            value={answer}
-                            onChange={(e) => handleAnswerChange(index, e.target.value)}
-                            placeholder={`Respuesta ${index + 1}`}
-                        />
-                    </div>
-                ))}
-            </div>
+            {questionType === 'multiple' ? (
+                <div>
+                    <h4>Respuestas (Máx. 4)</h4>
+                    {answers.map((answer, index) => (
+                        <div key={index}>
+                            <input
+                                type="text"
+                                value={answer}
+                                onChange={(e) => handleAnswerChange(index, e.target.value)}
+                                placeholder={`Respuesta ${index + 1}`}
+                            />
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div>
+                    <h4>Opciones</h4>
+                    <p>Verdadero</p>
+                    <p>Falso</p>
+                </div>
+            )}
 
             <div>
                 <h4>Respuesta Correcta</h4>
                 <select
                     value={correctAnswer}
                     onChange={(e) => setCorrectAnswer(e.target.value)}
+                    disabled={questionType === 'true_false' && !answers.every(a => a !== '')}
                 >
                     <option value="">Selecciona la respuesta correcta</option>
                     {answers.map((answer, index) => (
-                        <option key={index} value={answer}>
-                            {answer}
-                        </option>
+                        answer && (
+                            <option key={index} value={answer}>
+                                {answer}
+                            </option>
+                        )
                     ))}
                 </select>
             </div>
@@ -99,7 +159,7 @@ const CreateQuiz = () => {
                 <ul>
                     {questions.map((q, index) => (
                         <li key={index}>
-                            <p>{q.question}</p>
+                            <p>{q.question} <small>({q.type === 'multiple' ? 'Opción Múltiple' : 'Verdadero/Falso'})</small></p>
                             <ul>
                                 {q.answers.map((answer, i) => (
                                     <li key={i}>

@@ -6,7 +6,7 @@ const JoinQuiz = () => {
     const [error, setError] = useState('');
 
     const handleJoinQuiz = () => {
-        // Simulamos la validación del código. En un proyecto real, aquí verificaríamos el código en una base de datos.
+        // Simulamos la validación del código. En un proyecto real, aquí se verifica el código en una base de datos.
         if (quizCode.length === 8) { // Comprobamos que el código tenga una longitud de 8 caracteres
             setJoined(true);
             setError('');
