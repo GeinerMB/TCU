@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import './CreateQuiz.css';
+import axios from "axios";
 
 const CreateQuiz = () => {
     const [quizTitle, setQuizTitle] = useState('');
@@ -10,13 +10,16 @@ const CreateQuiz = () => {
     const [answers, setAnswers] = useState(['', '', '', '']);
     const [correctAnswer, setCorrectAnswer] = useState('');
     const [quizCode, setQuizCode] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Maneja cambios en las respuestas
     const handleAnswerChange = (index, value) => {
         const updatedAnswers = [...answers];
         updatedAnswers[index] = value;
         setAnswers(updatedAnswers);
     };
 
+    // Cambia entre pregunta múltiple/Verdadero-Falso
     const handleQuestionTypeChange = (type) => {
         setQuestionType(type);
         if (type === 'true_false') {
@@ -28,24 +31,29 @@ const CreateQuiz = () => {
         }
     };
 
+    // Agrega una nueva pregunta
     const handleAddQuestion = () => {
         let isValid = false;
 
         if (questionType === 'multiple') {
-            isValid = currentQuestion &&
-                answers.every(answer => answer !== '') &&
-                correctAnswer;
+            isValid = currentQuestion.trim() !== '' &&
+                answers.every(answer => answer.trim() !== '') &&
+                correctAnswer.trim() !== '';
         } else if (questionType === 'true_false') {
-            isValid = currentQuestion && correctAnswer;
+            isValid = currentQuestion.trim() !== '' &&
+                correctAnswer.trim() !== '';
         }
 
         if (isValid) {
             const newQuestion = {
-                question: currentQuestion,
+                question: currentQuestion.trim(),
                 type: questionType,
-                answers: questionType === 'true_false' ? ['Verdadero', 'Falso'] : answers,
-                correctAnswer
+                answers: questionType === 'true_false'
+                    ? ['Verdadero', 'Falso']
+                    : answers.map(a => a.trim()),
+                correctAnswer: correctAnswer.trim()
             };
+
             setQuestions([...questions, newQuestion]);
             setCurrentQuestion('');
             setQuestionType('multiple');
@@ -54,20 +62,34 @@ const CreateQuiz = () => {
         }
     };
 
-    const handleSubmit = () => {
-        const newQuizCode = uuidv4().slice(0, 8);
-        setQuizCode(newQuizCode);
-        console.log('Quiz creado:', {
-            quizTitle,
-            questions,
-            quizCode: newQuizCode
-        });
+    // Envía el quiz al backend
+    const handleSubmit = async () => {
+        setIsSubmitting(true);
+        try {
+            const quizData = {
+                quizTitle: quizTitle.trim(),
+                questions: questions.map(q => ({
+                    ...q,
+                    answers: q.answers.map(a => a.trim())
+                }))
+            };
+
+            const response = await axios.post("http://localhost:5000/api/quizzes", quizData);
+
+            setQuizCode(response.data.quizCode);
+            alert("¡Quiz guardado con éxito!");
+        } catch (error) {
+            alert(error.response?.data?.error || "Error al guardar el quiz");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
         <div className="create-quiz-container">
             <h2 className="quiz-title">Crear un nuevo Quiz</h2>
 
+            {/* Sección: Título del Quiz */}
             <div className="input-group">
                 <label className="form-label">Título del Quiz: </label>
                 <input
@@ -79,6 +101,7 @@ const CreateQuiz = () => {
                 />
             </div>
 
+            {/* Sección: Tipo de Pregunta */}
             <div className="section-container">
                 <h3 className="section-title">Tipo de Pregunta</h3>
                 <div className="button-group">
@@ -97,6 +120,7 @@ const CreateQuiz = () => {
                 </div>
             </div>
 
+            {/* Sección: Agregar Pregunta */}
             <div className="section-container">
                 <h3 className="section-title">Agregar Pregunta</h3>
                 <div className="input-group">
@@ -111,13 +135,14 @@ const CreateQuiz = () => {
                 </div>
             </div>
 
+            {/* Sección: Respuestas */}
             {questionType === 'multiple' ? (
                 <div className="section-container">
                     <h4 className="section-title">Respuestas (Máx. 4)</h4>
                     {answers.map((answer, index) => (
                         <div key={index} className="answer-input-container">
                             <input
-                                className="answer-input"
+                                className="form-input"
                                 type="text"
                                 value={answer}
                                 onChange={(e) => handleAnswerChange(index, e.target.value)}
@@ -136,6 +161,7 @@ const CreateQuiz = () => {
                 </div>
             )}
 
+            {/* Selección de Respuesta Correcta */}
             <div className="section-container">
                 <h4 className="section-title">Respuesta Correcta</h4>
                 <select
@@ -155,6 +181,7 @@ const CreateQuiz = () => {
                 </select>
             </div>
 
+            {/* Botones de Acción */}
             <div className="action-buttons">
                 <button
                     className="main-button add"
@@ -166,12 +193,13 @@ const CreateQuiz = () => {
                 <button
                     className="main-button save"
                     onClick={handleSubmit}
-                    disabled={questions.length === 0 || !quizTitle}
+                    disabled={isSubmitting || questions.length === 0 || !quizTitle}
                 >
-                    💾 Guardar Quiz
+                    {isSubmitting ? "Guardando..." : "💾 Guardar Quiz"}
                 </button>
             </div>
 
+            {/* Preguntas Agregadas */}
             <div className="added-questions">
                 <h3 className="section-title">Preguntas Agregadas</h3>
                 <ul className="question-list">
@@ -198,6 +226,7 @@ const CreateQuiz = () => {
                 </ul>
             </div>
 
+            {/* Mensaje de Éxito */}
             {quizCode && (
                 <div className="success-box">
                     <h3 className="success-title">¡Quiz creado con éxito! 🎉</h3>

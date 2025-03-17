@@ -1,0 +1,346 @@
+.join-quiz-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    color: #000000;
+    font-family: 'Arial', sans-serif;
+}
+
+.join-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-weight: 600;
+    color: #000000;
+    font-size: 1.1rem;
+}
+
+.input-group input {
+    padding: 0.8rem 1.2rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #000000;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.main-button {
+    background: #4CAF50;
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.main-button:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.main-button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.error-message {
+    color: #dc3545;
+    padding: 1rem;
+    background: #ffe6e6;
+    border-radius: 8px;
+    margin-top: 1rem;
+    border: 1px solid #ffcccc;
+    font-weight: 500;
+}
+
+.quiz-details {
+    margin-top: 2rem;
+    color: #000000;
+}
+
+.questions-list {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.question-card {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    color: #000000;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.question-type {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+    color: #333;
+}
+
+.answers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.answer-card {
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    color: #333;
+}
+
+.answer-card:hover:not(.correct, .wrong) {
+    border-color: #2196F3;
+    background: #f5fbff;
+}
+
+.answer-card.selected {
+    border-color: #2196F3;
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.answer-card.correct {
+    border-color: #4CAF50;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.answer-card.wrong {
+    border-color: #f44336;
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.true-false-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.tf-button {
+    flex: 1;
+    padding: 1.2rem 2rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.tf-button:hover:not(.correct, .wrong) {
+    border-color: #2196F3;
+    background: #f5fbff;
+}
+
+.tf-button.selected {
+    border-color: #2196F3;
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.tf-button.correct {
+    border-color: #4CAF50;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.tf-button.wrong {
+    border-color: #f44336;
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.quiz-controls {
+    margin-top: 2rem;
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.answers-status {
+    color: #666;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.quiz-results {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 2px solid #4CAF50;
+}
+
+.quiz-results h4 {
+    color: #2e7d32;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.correct-icon,
+.wrong-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.correct-icon {
+    color: #4CAF50;
+}
+
+.wrong-icon {
+    color: #f44336;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.question-card {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.score-display {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid #4CAF50;
+}
+
+.score-display h4 {
+    color: #2e7d32;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.score-display p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.selected {
+    border-color: #2196F3 !important;
+    background-color: #e3f2fd !important;
+}
+
+/* Estilos para respuestas correctas e incorrectas */
+.answer-card.correct {
+    background-color: #e8f5e9 !important;
+    border-color: #4CAF50 !important;
+    color: #2e7d32;
+}
+
+.answer-card.incorrect {
+    background-color: #ffebee !important;
+    border-color: #f44336 !important;
+    color: #c62828;
+}
+
+.tf-button.correct {
+    background-color: #e8f5e9 !important;
+    border-color: #4CAF50 !important;
+    color: #2e7d32 !important;
+}
+
+.tf-button.incorrect {
+    background-color: #ffebee !important;
+    border-color: #f44336 !important;
+    color: #c62828 !important;
+}
+
+.status-icon {
+    position: absolute;
+    right: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.answer-card .status-icon {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.tf-button .status-icon {
+    margin-left: 0.5rem;
+}
+
+.score-breakdown {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.score-breakdown p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
