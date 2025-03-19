@@ -22,7 +22,7 @@ const upload = multer({
 //      Middleware
 // ======================
 app.use(cors({
-    origin: "nairiawarilab-blush-nu.vercel.app",
+    origin: "https://nairiawarilab-blush-nu.vercel.app",
     methods: ["GET", "POST", "DELETE"]
 }));
 app.use(express.json());
