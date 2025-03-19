@@ -17,7 +17,7 @@ const JoinQuiz = () => {
         setError('');
 
         try {
-            const response = await axios.get(`http://localhost:5000/api/quizzes/${quizCode.toUpperCase()}`);
+            const response = await axios.get(`https://tcu-production-de21.up.railway.app/api/quizzes/${quizCode.toUpperCase()}`);
             setQuizData(response.data);
             setSelectedAnswers(new Array(response.data.questions.length).fill(null));
             setScore(null);
