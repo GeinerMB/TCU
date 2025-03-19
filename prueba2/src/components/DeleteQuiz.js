@@ -15,7 +15,7 @@ const DeleteQuiz = () => {
 
         try {
             const response = await axios.delete(
-                `http://localhost:5000/api/quizzes/${quizCode.toUpperCase()}`,
+                `https://tcu-production-de21.up.railway.app/api/quizzes/${quizCode.toUpperCase()}`,
                 { data: { adminCode } }
             );
 
