@@ -88,7 +88,14 @@ const JoinQuiz = () => {
             ) : (
                 <div className={`quiz-details ${isEvaluated ? 'quiz-evaluated' : ''}`}>
                     <h3>{quizData.quizTitle}</h3>
-
+                    {quizData.audio && (
+                        <audio controls>
+                            <source
+                                src={`data:${quizData.audio.contentType};base64,${quizData.audio.data}`}
+                            />
+                            Tu navegador no soporta el elemento de audio.
+                        </audio>
+                    )}
                     <div className="questions-list">
                         {quizData.questions.map((question, index) => (
                             <div key={index} className="question-card">

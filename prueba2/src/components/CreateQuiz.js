@@ -11,6 +11,11 @@ const CreateQuiz = () => {
     const [correctAnswer, setCorrectAnswer] = useState('');
     const [quizCode, setQuizCode] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [audioFile, setAudioFile] = useState(null);
+
+    const handleAudioUpload = (e) => {
+        setAudioFile(e.target.files[0]);
+    };
 
     // Maneja cambios en las respuestas
     const handleAnswerChange = (index, value) => {
@@ -66,15 +71,20 @@ const CreateQuiz = () => {
     const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
-            const quizData = {
-                quizTitle: quizTitle.trim(),
-                questions: questions.map(q => ({
-                    ...q,
-                    answers: q.answers.map(a => a.trim())
-                }))
-            };
+            const formData = new FormData();
+            formData.append('quizTitle', quizTitle.trim());
+            formData.append('questions', JSON.stringify(questions));
+            formData.append('audio', audioFile);
 
-            const response = await axios.post("http://localhost:5000/api/quizzes", quizData);
+            const response = await axios.post(
+                "http://localhost:5000/api/quizzes",
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
 
             setQuizCode(response.data.quizCode);
             alert("¡Quiz guardado con éxito!");
@@ -99,6 +109,20 @@ const CreateQuiz = () => {
                     onChange={(e) => setQuizTitle(e.target.value)}
                     placeholder="Escribe el título del quiz"
                 />
+            </div>
+
+            <div className="section-container">
+                <h3 className="section-title">Audio del Quiz</h3>
+                <div className="input-group">
+                    <label className="form-label">Subir audio: </label>
+                    <input
+                        type="file"
+                        accept="audio/*"
+                        onChange={handleAudioUpload}
+                        className="file-input"
+                    />
+                    {audioFile && <span className="file-name">{audioFile.name}</span>}
+                </div>
             </div>
 
             {/* Sección: Tipo de Pregunta */}
