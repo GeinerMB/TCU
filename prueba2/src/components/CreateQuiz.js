@@ -77,7 +77,7 @@ const CreateQuiz = () => {
             formData.append('audio', audioFile);
 
             const response = await axios.post(
-                "tcu-production-de21.up.railway.app",
+                "https:tcu-production-de21.up.railway.app",
                 formData,
                 {
                     headers: {
