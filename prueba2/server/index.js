@@ -139,7 +139,7 @@ app.post("/api/quizzes", upload.single("audio"), async (req, res) => {
             throw new Error("Debes subir un archivo de audio");
         }
 
-        // Crear el quiz SIN especificar quizCode
+
         const newQuiz = new Quiz({
             quizTitle: req.body.quizTitle,
             questions: JSON.parse(req.body.questions),
