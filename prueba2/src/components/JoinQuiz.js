@@ -156,8 +156,8 @@ const JoinQuiz = () => {
                             <div className="score-display">
                                 <h4>Puntuación Final: {score}/100</h4>
                                 <div className="score-breakdown">
-                                    <p>✅ Correctas: {score / 100 * quizData.questions.length}</p>
-                                    <p>❌ Incorrectas: {quizData.questions.length - (score / 100 * quizData.questions.length)}</p>
+                                    <p>✅ Correctas: {Math.round(score / 100 * quizData.questions.length)}</p>
+                                    <p>❌ Incorrectas: {Math.round(quizData.questions.length - (score / 100 * quizData.questions.length))}</p>
                                 </div>
                             </div>
                         )}
